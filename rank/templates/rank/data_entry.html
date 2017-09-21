@@ -1,0 +1,10 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+<div id="dataEntryForm">
+
+{% crispy rankingform  %}
+
+</div>
+

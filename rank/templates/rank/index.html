@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<html>
+  <head>
+    <title>Leaderboard</title>
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+  </head>
+  <style>
+    body {padding-top: 50px;}
+  </style>
+  <body class="background">
+<div class="jumbotron text-center">
+  <h1>{{ currentSprint.name }}</h1>
+</div>
+
+<div class="container-fluid">
+ <div id="mix-wrapper">
+    {% for team in currentStandings%}
+
+        <div class="card mix-target" data-order={{ team.ranking__points__sum }}>
+            <div class="row text-center">
+                <div class="col-lg-4 card-align">
+                    <div class="'rankingImage"> <img src={{ team.profile_pic }}></div>
+                </div>
+                <div class="col-lg-4 card-align">
+                    <div class="rankingName">{{ team.name }}</div>
+                </div>
+                <div class="col-lg-4 card-align">
+                    <div class="rankingPoints"> <a href="{% url 'detail' %}"> {{ team.ranking__points__sum }}</a></div>
+                </div>
+          </div>
+        </div>
+
+    {% endfor %}
+ </div>
+<button class="sort-btn" data-sort="order:asc">Ascending</button>
+<button class="sort-btn" data-sort="order:desc">Descending</button>
+</div>
+  </body>
+
+      <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
+  <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+    <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
+    <script src="{% static "site/rank.js" %}"></script>
+</html>

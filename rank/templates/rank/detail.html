@@ -1,0 +1,49 @@
+{% load staticfiles %}
+
+<html>
+  <head>
+    <title>Team Detail</title>
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+  </head>
+  <style>
+    body {padding-top: 50px;}
+  </style>
+  <body class="background">
+<div class="jumbotron text-center">
+  <h1>{{ teamDetail.sprint__name  }} Team Detail</h1>
+</div>
+<div><a href="{% url 'ranking' %}">Return to home</a></div>
+<div class="container">
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>Date</th>
+        <th>Criteria</th>
+          <th>Team</th>
+          <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in teamDetail%}
+    <tr>
+        <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
+        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+          <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
+          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+        <td><div class="teamDetail">{{ entry.points }}</div></td>
+      </tr>
+   {% endfor %}
+    </tbody>
+  </table>
+
+
+</div>
+  </body>
+
+      <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
+  <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+</html>
