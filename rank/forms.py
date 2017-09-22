@@ -9,6 +9,11 @@ class RankingForm(forms.ModelForm):
     class Meta:
         model = Ranking
         fields = '__all__'
+        dataDate = forms.DateField(
+            widget=forms.TextInput(
+                attrs={'type': 'date'}
+            )
+        )
 
     helper = FormHelper()
     helper.form_method = 'POST'

@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.ranking, name='ranking'),
     url(r'^dataentry/', views.dataEntry, name='dataentry'),
+    url(r'^detail/sprint/(?P<sprintid>[0-9]+)/$', views.sprintDetails, name='sprintdetail'),
+    url(r'^detail/team/(?P<teamid>[0-9]+)/$', views.teamDetails, name='teamdetail'),
     url(r'^detail/', views.sprintDetails, name='detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

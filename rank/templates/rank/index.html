@@ -11,7 +11,7 @@
   </style>
   <body class="background">
 <div class="jumbotron text-center">
-  <h1>{{ currentSprint.name }}</h1>
+    <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
 </div>
 
 <div class="container-fluid">
@@ -27,7 +27,7 @@
                     <div class="rankingName">{{ team.name }}</div>
                 </div>
                 <div class="col-lg-4 card-align">
-                    <div class="rankingPoints"> <a href="{% url 'detail' %}"> {{ team.ranking__points__sum }}</a></div>
+                    <div class="rankingPoints"> <a href="{% url 'teamdetail' teamid=team.id %}"> {{ team.ranking__points__sum }}</a></div>
                 </div>
           </div>
         </div>
@@ -36,6 +36,7 @@
  </div>
 <button class="sort-btn" data-sort="order:asc">Ascending</button>
 <button class="sort-btn" data-sort="order:desc">Descending</button>
+<button class="sort-btn" data-sort="random">Random</button>
 </div>
   </body>
 

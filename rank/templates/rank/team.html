@@ -2,23 +2,25 @@
 
 <html>
   <head>
-    <title>{{ title }}</title>
+    <title>{{ teamDetailsActive.0.team__name  }}</title>
       <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
       <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   </head>
 
   <body class="background">
 <div class="jumbotron text-center">
-  <h1>{{ title  }} </h1>
+  <h1>{{ teamDetailsActive.0.team__name }} </h1>
 </div>
 <div class="returnHome"><a href="{% url 'ranking' %}">Home</a></div>
 <div class="container">
 
 
-  <table class="table table-hover">
+{% if teamDetailsActive %}
+    <div class="ActiveInactiveHeader">Active Sprints</div>
+ <table class="table table-hover">
     <thead>
       <tr>
-        <th>Sprint</th>
+        <th>Sprints</th>
         <th>Date</th>
         <th>Criteria</th>
           <th>Team</th>
@@ -26,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for entry in details%}
+    {% for entry in teamDetailsActive%}
     <tr>
         <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
         <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
@@ -37,7 +39,34 @@
    {% endfor %}
     </tbody>
   </table>
+    <br />
+{% endif %}
 
+{% if teamDetailsInactive %}
+    <div class="ActiveInactiveHeader">Inactive Sprints</div>
+ <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>Date</th>
+        <th>Criteria</th>
+          <th>Team</th>
+          <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in teamDetailsInactive%}
+    <tr>
+        <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
+        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+          <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
+          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+        <td><div class="teamDetail">{{ entry.points }}</div></td>
+      </tr>
+   {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
 
 </div>
   </body>

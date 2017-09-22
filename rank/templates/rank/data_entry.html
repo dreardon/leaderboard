@@ -2,9 +2,40 @@
 {% load crispy_forms_tags %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+  <body>
 <div id="dataEntryForm">
 
 {% crispy rankingform  %}
 
 </div>
 
+<div class="container">
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>Date</th>
+        <th>Criteria</th>
+          <th>Team</th>
+          <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in sprintDetail%}
+    <tr>
+        <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
+        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+          <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
+          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+        <td><div class="teamDetail">{{ entry.points }}</div></td>
+      </tr>
+   {% endfor %}
+    </tbody>
+  </table>
+
+
+</div>
+
+  </body>

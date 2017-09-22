@@ -32,6 +32,14 @@
     padding-top: 17px;
 }
 
+.card:hover {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  transform: scale(1.05);
+}
+
 .rankingImnage {
 
 }
@@ -50,10 +58,24 @@
     text-decoration: none;
 }
 
+.sprintTitle a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.returnHome a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 #dataEntryForm {
     width:500px;
     margin: 10px;
     padding: 10px;
     border: 2px solid grey;
     border-radius:3px;
+}
+
+.ActiveInactiveHeader {
+    font-size: 30px;
 }

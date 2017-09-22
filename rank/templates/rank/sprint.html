@@ -9,7 +9,7 @@
 
   <body class="background">
 <div class="jumbotron text-center">
-  <h1>{{ title  }} </h1>
+  <h1>{{ sprintDetails.0.sprint__name }} </h1>
 </div>
 <div class="returnHome"><a href="{% url 'ranking' %}">Home</a></div>
 <div class="container">
@@ -18,7 +18,6 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Sprint</th>
         <th>Date</th>
         <th>Criteria</th>
           <th>Team</th>
@@ -26,9 +25,8 @@
       </tr>
     </thead>
     <tbody>
-    {% for entry in details%}
+    {% for entry in sprintDetails%}
     <tr>
-        <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
         <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
           <td><div class="teamDetail">{{ entry.team__name }}</div></td>
