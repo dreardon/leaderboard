@@ -3,8 +3,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   <body>
-<div id="dataEntryForm">
+<a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
+  <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
+</a>
 
+  <div id="dataEntryForm">
 {% crispy rankingform  %}
 
 </div>
@@ -20,6 +23,7 @@
         <th>Criteria</th>
           <th>Team</th>
           <th>Points</th>
+          <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -30,6 +34,7 @@
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
           <td><div class="teamDetail">{{ entry.team__name }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>
+        <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a></td>
       </tr>
    {% endfor %}
     </tbody>

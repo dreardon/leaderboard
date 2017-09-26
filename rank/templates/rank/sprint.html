@@ -11,8 +11,9 @@
 <div class="jumbotron text-center">
   <h1>{{ sprintDetails.0.sprint__name }} </h1>
 </div>
-<div class="returnHome"><a href="{% url 'ranking' %}">Home</a></div>
-<div class="container">
+<a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
+  <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
+</a><div class="container">
 
 
   <table class="table table-hover">

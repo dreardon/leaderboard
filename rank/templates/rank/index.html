@@ -17,31 +17,47 @@
 <div class="container-fluid">
  <div id="mix-wrapper">
     {% for team in currentStandings%}
-
-        <div class="card mix-target" data-order={{ team.ranking__points__sum }}>
+        <div class="card mix-target" data-order={{ team.total_points }}>
             <div class="row text-center">
-                <div class="col-lg-4 card-align">
+                <div class="col-lg-3 card-align">
                     <div class="'rankingImage"> <img src={{ team.profile_pic }}></div>
                 </div>
-                <div class="col-lg-4 card-align">
+                <div class="col-lg-3 card-align">
                     <div class="rankingName">{{ team.name }}</div>
                 </div>
-                <div class="col-lg-4 card-align">
-                    <div class="rankingPoints"> <a href="{% url 'teamdetail' teamid=team.id %}"> {{ team.ranking__points__sum }}</a></div>
+                <div class="col-lg-3 card-align">
+                    <div class="rankingPoints" teamId={{ team.id }}> <a href="{% url 'teamdetail' teamId=team.id %}"> {{ team.total_points }}</a></div>
                 </div>
-          </div>
+                <div class="col-lg-3 card-align">
+                    <canvas teamName = {{ team.name }} team={{ team.id }} id="teamCanvas{{ team.id }}" class='teamGraph' height="75"></canvas>
+                </div>
+                    {% comment %}First Points Earned On: {{ teamSprintTrend.0.ranking__dataDate }}
+                    {% for score in teamSprintTrend%}
+                        {% if score.id == team.id  %}
+                             {{ score.ranking__dataDate }}:{{ score.daily_points }}
+                        {% endif %}
+                    {% endfor %}{% endcomment %}
+            </div>
         </div>
 
     {% endfor %}
  </div>
-<button class="sort-btn" data-sort="order:asc">Ascending</button>
-<button class="sort-btn" data-sort="order:desc">Descending</button>
-<button class="sort-btn" data-sort="random">Random</button>
+    <button id="randomSort" class="sort-btn hidden" data-sort="random">Random</button>
+    <button id="descendingSort" class="sort-btn hidden" data-sort="order:desc">Descending</button>
 </div>
+<img src="{% static "img/refresh.png" %}" height="16px" width="16px" onclick="updateRankingPage();"/>
+<canvas id="myChart" width="1455" height="200"></canvas>
+
   </body>
 
-      <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
-  <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
-    <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
-    <script src="{% static "site/rank.js" %}"></script>
+        <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+
+        <script src="{% static "vendor/d3/d3.v4.js" %}"></script>
+        <script src="{% static "vendor/chart/Chart.js" %}"></script>
+        <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+        <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
+        <script src="{% static "site/rank.js" %}"></script>
+
+
 </html>
