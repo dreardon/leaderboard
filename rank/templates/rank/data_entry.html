@@ -7,45 +7,44 @@
   <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
 </a>
 
-{% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-{% endfor %}
-
-  <div id="dataEntryForm">
-{% crispy rankingform  %}
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3">
+              <div id="dataEntryForm">
+                    {% crispy rankingform  %}
+              </div>
+        </div>
+        <div class="col-lg-9">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Sprint</th>
+                    <th>Date</th>
+                    <th>Criteria</th>
+                      <th>Team</th>
+                      <th>Points</th>
+                      <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for entry in sprintDetail%}
+                <tr>
+                    <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
+                    <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+                      <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
+                      <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+                    <td><div class="teamDetail">{{ entry.points }}</div></td>
+                    <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
+                    <a href="{% url 'editranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
+                  </tr>
+               {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </div>
 </div>
 
-<div class="container">
-
-
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Sprint</th>
-        <th>Date</th>
-        <th>Criteria</th>
-          <th>Team</th>
-          <th>Points</th>
-          <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for entry in sprintDetail%}
-    <tr>
-        <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
-        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
-          <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
-          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
-        <td><div class="teamDetail">{{ entry.points }}</div></td>
-        <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
-        <a href="{% url 'editranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
-      </tr>
-   {% endfor %}
-    </tbody>
-  </table>
-
-
-</div>
-
-  </body>
+</body>

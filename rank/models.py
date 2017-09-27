@@ -11,7 +11,7 @@ class Sprint(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     isActive = models.BooleanField()
-    profile_pic = models.ImageField(upload_to='media',null=True, blank=True)
+    profile_pic = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return "{0} {1} {2}".format(self.name,'(Active: ',str(self.isActive)+')')

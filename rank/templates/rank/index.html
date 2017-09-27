@@ -17,7 +17,7 @@
         <div class="card mix-target" data-order={{ team.total_points }}>
             <div class="row text-center">
                 <div class="col-lg-3 card-align">
-                    <div class="'rankingImage"> <img src={{ team.profile_pic }}></div>
+                    <div class="'rankingImage"> <img src="media/{{ team.profile_pic }}" /></div>
                 </div>
                 <div class="col-lg-3 card-align">
                     <div class="rankingName">{{ team.name }}</div>
@@ -49,8 +49,7 @@
   </body>
 
         <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-
+        <script src="{% static "vendor/moment/moment.min.js" %}"></script>
         <script src="{% static "vendor/d3/d3.v4.js" %}"></script>
         <script src="{% static "vendor/chart/Chart.js" %}"></script>
         <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
