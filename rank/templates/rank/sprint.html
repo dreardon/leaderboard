@@ -28,7 +28,7 @@
     <tbody>
     {% for entry in sprintDetails%}
     <tr>
-        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+        <td><div class="dateDetail">{{ entry.dataDate|date:'m-d-y' }}</div></td>
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
           <td><div class="teamDetail">{{ entry.team__name }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>

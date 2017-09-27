@@ -32,7 +32,7 @@
     {% for entry in teamDetailsActive%}
     <tr>
         <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
-        <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
+        <td><div class="dateDetail">{{ entry.dataDate|date:'m-d-y' }}</div></td>
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
           <td><div class="teamDetail">{{ entry.team__name }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>
