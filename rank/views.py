@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from datetime import datetime
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
+from django.contrib import messages
+
 
 
 def ranking(request):
@@ -50,8 +52,12 @@ def dataEntry(request, template_name='rank/data_entry.html'):
                 for key, value in defaults.items():
                     setattr(obj, key, value)
                 obj.save()
+                messages.success(request, 'The ranking was updated!')
+                return redirect('dataentry')
             except Ranking.DoesNotExist:
                 form.save()
+                messages.success(request, 'A new ranking has been saved!')
+                return redirect('dataentry')
         return redirect("dataentry")
 
     else:
@@ -59,6 +65,15 @@ def dataEntry(request, template_name='rank/data_entry.html'):
         return render(request, template_name, {
             'rankingform': form,'sprintDetail':sprintDetail, 'render_form': True
         })
+
+def editRanking(request, template_name='rank/data_entry.html',**kwargs):
+    sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
+    rankingId = kwargs['rankingId']
+    ranking = Ranking.objects.get(pk=rankingId)
+    form = RankingForm(instance=ranking)
+    return render(request, template_name, {
+        'rankingform': form, 'sprintDetail':sprintDetail, 'render_form': True
+    })
 
 def deleteRanking(request,**kwargs):
     rankingId = kwargs['rankingId']

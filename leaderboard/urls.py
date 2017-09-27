@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^detail/sprint/(?P<sprintid>[0-9]+)/$', views.sprintDetails, name='sprintdetail'),
     url(r'^detail/team/(?P<teamId>[0-9]+)/$', views.teamDetails, name='teamdetail'),
     url(r'^ranking/delete/(?P<rankingId>[0-9]+)/$', views.deleteRanking, name='deleteranking'),
+    url(r'^ranking/edit/(?P<rankingId>[0-9]+)/$', views.editRanking, name='editranking'),
     url(r'^detail/', views.sprintDetails, name='detail'),
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

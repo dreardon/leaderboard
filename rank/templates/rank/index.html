@@ -6,9 +6,6 @@
       <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   </head>
-  <style>
-    body {padding-top: 50px;}
-  </style>
   <body class="background">
 <div class="jumbotron text-center">
     <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
@@ -46,6 +43,7 @@
     <button id="descendingSort" class="sort-btn hidden" data-sort="order:desc">Descending</button>
 </div>
 <img src="{% static "img/refresh.png" %}" height="16px" width="16px" onclick="updateRankingPage();"/>
+<a href="/dataentry"><img src="{% static "img/dataentry.png" %}" height="16px" width="16px"/></a>
 <canvas id="myChart" width="1455" height="200"></canvas>
 
   </body>

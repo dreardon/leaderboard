@@ -36,20 +36,22 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
     });
 };
 
-//$( ".rankingPoints" ).each(function() {
-//  buildTeamTrendGraph($(this).attr('teamId'),'myChart')
-//});
-
 $( ".teamGraph" ).each(function() {
   buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('id'))
 });
 
+
+//$( ".rankingPoints" ).each(function() {
+//  buildTeamTrendGraph($(this).attr('teamId'),'myChart')
+//});
+
+
 function updateRankingPage() {
-      $('#randomSort').click();
-      $('#randomSort').click();
-      $('#randomSort').click();
-      $('#descendingSort').click();
-}
+    for (i = 0; i < 7; i++) {
+        $('#randomSort').click();
+    }
+    $('#descendingSort').click();
+};
 
 var mixer = mixitup('.container-fluid', {
     animation: {
@@ -63,7 +65,9 @@ mixitup('#mix-wrapper', {
   },
   animation: {
     effects: 'fade rotateZ(-180deg)',
-    duration: 700
+    duration: 300,
+    queue: true,
+    queueLimit: 15
   },
   classNames: {
     elementSort: 'sort-btn'

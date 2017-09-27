@@ -2,10 +2,14 @@
 {% load crispy_forms_tags %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
-  <body>
+  <body class="background">
 <a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
   <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
 </a>
+
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
 
   <div id="dataEntryForm">
 {% crispy rankingform  %}
@@ -23,7 +27,7 @@
         <th>Criteria</th>
           <th>Team</th>
           <th>Points</th>
-          <th>Action</th>
+          <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -34,7 +38,8 @@
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
           <td><div class="teamDetail">{{ entry.team__name }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>
-        <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a></td>
+        <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
+        <a href="{% url 'editranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
       </tr>
    {% endfor %}
     </tbody>
