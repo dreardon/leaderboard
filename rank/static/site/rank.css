@@ -14,7 +14,7 @@
 .card {
   transition: box-shadow .3s;
     width: 100%;
-    height: 100px;
+    height: 125px;
   border-radius:3px;
   border: 2px solid grey;
   background: black;
@@ -29,7 +29,7 @@
 }
 
 .card-align {
-    padding-top: 17px;
+    padding-top: 20px;
 }
 
 .card:hover {
@@ -74,4 +74,9 @@
 
 .ActiveInactiveHeader {
     font-size: 30px;
+}
+
+.blur {
+  -webkit-filter: blur(8px);filter:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' ><filter id='blur5'><feGaussianBlur in='SourceGraphic' stdDeviation='5' /></filter></svg>#blur5");
+  filter:blur(8px);
 }

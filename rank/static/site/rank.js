@@ -30,7 +30,25 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
                 labels: {
                     fontColor: 'rgb(255, 99, 132)'
                 }
-            }
+            },
+             scales: {
+                 xAxes: [{
+                     type: 'time',
+                     time: {
+                         displayFormats: {
+                             'millisecond': 'MMM DD',
+                             'second': 'MMM DD',
+                             'minute': 'MMM DD',
+                             'hour': 'MMM DD',
+                             'day': 'MMM DD',
+                             'week': 'MMM DD',
+                             'month': 'MMM DD',
+                             'quarter': 'MMM DD',
+                             'year': 'MMM DD',
+                         }
+                     }
+                 }]
+             }
           }
         });
     });
@@ -47,11 +65,14 @@ $( ".teamGraph" ).each(function() {
 
 
 function updateRankingPage() {
+    //$('#mix-wrapper').addClass("blur");
     for (i = 0; i < 7; i++) {
         $('#randomSort').click();
     }
     $('#descendingSort').click();
+    //$('#mix-wrapper').removeClass("blur");
 };
+
 
 var mixer = mixitup('.container-fluid', {
     animation: {

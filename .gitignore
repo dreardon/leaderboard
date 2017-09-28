@@ -39,7 +39,6 @@ build
 #PyCharm Files
 .idea/
 
-rank/static/img
 media/
 
 # Linux Editors
