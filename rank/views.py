@@ -3,11 +3,13 @@ from .models import Team, Criteria, Ranking, Sprint
 from django.shortcuts import redirect, render, reverse
 from .forms import RankingForm
 from django.db.models import Sum
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from datetime import datetime
 from django.utils.dateformat import DateFormat
 from django.utils.formats import get_format
 from django.contrib import messages
+from datetime import date, timedelta
+import time
 
 
 
@@ -20,11 +22,57 @@ def ranking(request):
     context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings}
     return render(request, 'rank/index.html', context)
 
+def teamSprintDates(request):
+
+    # Get Date Range for Labels
+    firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
+    delta = date.today() - firstdate.get('dataDate')  # timedelta
+    dateListing = []
+    for i in range(delta.days + 1):
+        dateListing.append(firstdate.get('dataDate') + timedelta(days=i))
+
+    return JsonResponse(dateListing, safe=False)
+
+def teamSprintPoints(request,**kwargs):
+    def cumulative_add(scoreListing):
+        cumulativeListing = []
+        for elt in scoreListing:
+            if len(cumulativeListing) > 0:
+                cumulativeListing.append(cumulativeListing[-1] + elt)
+            else:
+                cumulativeListing.append(elt)
+        return cumulativeListing
+
+    # Get Date Range for Labels
+    firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
+    delta = date.today() - firstdate.get('dataDate')  # timedelta
+    dateListing = []
+    for i in range(delta.days + 1):
+        dateListing.append(firstdate.get('dataDate') + timedelta(days=i))
+
+    teamId = kwargs['teamId']
+    scoreListing = []
+    for x in dateListing:
+        if Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True,
+                                  sprint__isActive=True,
+                                  dataDate=x).exists():
+            newEntry = Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True,
+                                              sprint__isActive=True, dataDate=x) \
+                .values('dataDate') \
+                .annotate(daily_points=Sum('points')).values('daily_points')[0]
+            scoreListing.append(int(newEntry.get('daily_points')))
+        else:
+            scoreListing.append(0)
+
+    cumulativeListing = list(cumulative_add(scoreListing))
+    return JsonResponse(cumulativeListing, safe=False)
+
 def teamSprintTrend(request,**kwargs):
     teamId = kwargs['teamId']
-    data = Team.objects.filter(id=teamId,isActive=True,ranking__criteria__isActive=True,ranking__sprint__isActive=True)\
-     .values('id','ranking__dataDate')\
-     .annotate(daily_points=Sum('ranking__points')).order_by('ranking__dataDate')
+    data = Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True, sprint__isActive=True) \
+        .values('dataDate') \
+        .annotate(daily_points=Sum('points')).order_by('dataDate')
+
     return JsonResponse(list(data), safe=False)
 
 def sprintDetails(request,**kwargs):

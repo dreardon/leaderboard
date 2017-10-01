@@ -11,7 +11,7 @@
 <div class="jumbotron text-center">
     <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
 </div>
-
+{% comment %}Last Updated:{% endcomment %}
 <div class="container-fluid">
  <div id="mix-wrapper">
     {% for team in currentStandings%}
@@ -24,17 +24,11 @@
                     <div class="rankingName">{{ team.name }}</div>
                 </div>
                 <div class="col-lg-3 card-align">
-                    <div class="rankingPoints" teamId={{ team.id }}> <a href="{% url 'teamdetail' teamId=team.id %}"> {{ team.total_points }}</a></div>
+                    <div class="rankingPoints" teamId={{ team.id }} teamName={{ team.name }}> <a href="{% url 'teamdetail' teamId=team.id %}"> {{ team.total_points }}</a></div>
                 </div>
                 <div class="col-lg-3 card-align">
                     <canvas teamName = {{ team.name }} team={{ team.id }} id="teamCanvas{{ team.id }}" class='teamGraph' height="75"></canvas>
                 </div>
-                    {% comment %}First Points Earned On: {{ teamSprintTrend.0.ranking__dataDate }}
-                    {% for score in teamSprintTrend%}
-                        {% if score.id == team.id  %}
-                             {{ score.ranking__dataDate }}:{{ score.daily_points }}
-                        {% endif %}
-                    {% endfor %}{% endcomment %}
             </div>
         </div>
 
@@ -45,7 +39,8 @@
 </div>
 <img src="{% static "img/refresh.png" %}" height="16px" width="16px" onclick="updateRankingPage();"/>
 <a href="/dataentry"><img src="{% static "img/dataentry.png" %}" height="16px" width="16px"/></a>
-<canvas id="myChart" width="1455" height="200"></canvas>
+{% comment %}<canvas id="myChart" width="1455" height="200"></canvas>{% endcomment %}
+<canvas id="lineChart" width="1455" height="200"></canvas>
 
   </body>
 
@@ -56,6 +51,15 @@
         <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
         <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
         <script src="{% static "site/rank.js" %}"></script>
+
+<script>
+
+d3.json("api/teamSprintDates/", function (error, dateData) {
+     window.labeldata = dateData
+    buildTeamLeaderGraph()
+});
+
+</script>
 
 
 </html>

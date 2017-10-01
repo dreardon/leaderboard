@@ -9,13 +9,17 @@ class RankingForm(forms.ModelForm):
     class Meta:
         model = Ranking
         fields = '__all__'
-        dataDate = forms.DateField(
-            widget=forms.TextInput(
-                attrs={'type': 'date'}
-            )
-        )
 
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.form_action = 'dataentry'
+    helper.layout = Layout(
+        Field('sprint', css_class='input-xlarge'),
+        Field('team', css_class='input-xlarge'),
+        Field('criteria', rows="3", css_class='input-xlarge'),
+        Field('points', style="background: #FAFAFA; padding: 10px;"),
+        Field('dataDate', id="dataDate",
+              template='rank/datepicker.html')
+    )
     helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
+

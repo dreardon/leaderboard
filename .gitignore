@@ -38,6 +38,7 @@ build
 
 #PyCharm Files
 .idea/
+*leaderboard.bundle
 
 media/
 

@@ -1,3 +1,7 @@
+function random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+}
 
 function buildTeamTrendGraph(teamName, teamId,canvasElement) {
 
@@ -7,7 +11,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
         var chrtdata = [];
         for(var i =0; i < cdata.length; i++)
         {
-          labeldata.push(cdata[i].ranking__dataDate);
+          labeldata.push(cdata[i].dataDate);
           chrtdata.push(cdata[i].daily_points)
         }
         var ctx = document.getElementById(canvasElement);
@@ -58,11 +62,60 @@ $( ".teamGraph" ).each(function() {
   buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('id'))
 });
 
+function addData(chart, label, color, data) {
+    var newDataSet = {
+        label: label,
+        fill:true,
+        borderWidth: 2,
+        backgroundColor: color,
+        borderColor: color,
+        data: data
+    }
+    chart.data.datasets.push(newDataSet);
+    chart.update();
+}
 
-//$( ".rankingPoints" ).each(function() {
-//  buildTeamTrendGraph($(this).attr('teamId'),'myChart')
-//});
+function buildTeamLeaderGraph() {
+    var LeaderGraphData = {
+        labels: labeldata,
+        datasets: []
+    }
 
+    var ctx = document.getElementById("lineChart");
+    window.lineChart = new Chart(ctx, {
+        type: 'line',
+        data: LeaderGraphData,
+        options: {
+            maintainAspectRatio: true,
+             scales: {
+                 xAxes: [{
+                     type: 'time',
+                     time: {
+                         displayFormats: {
+                             'millisecond': 'MMM DD',
+                             'second': 'MMM DD',
+                             'minute': 'MMM DD',
+                             'hour': 'MMM DD',
+                             'day': 'MMM DD',
+                             'week': 'MMM DD',
+                             'month': 'MMM DD',
+                             'quarter': 'MMM DD',
+                             'year': 'MMM DD',
+                         }
+                     }
+                 }]
+             }
+          }
+    });
+
+    $(".rankingPoints").each(function () {
+        var randomColor = random_rgba()
+        var teamName = $(this).attr('teamname')
+        d3.json('/api/teamSprintPoints/' + $(this).attr('teamid')+'/', function (error, data) {
+            addData(lineChart,teamName,randomColor,data);
+        });
+    });
+};
 
 function updateRankingPage() {
     //$('#mix-wrapper').addClass("blur");

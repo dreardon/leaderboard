@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^ranking/edit/(?P<rankingId>[0-9]+)/$', views.editRanking, name='editranking'),
     url(r'^detail/', views.sprintDetails, name='detail'),
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
+    url(r'^api/teamSprintDates/', views.teamSprintDates, name='teamSprintDates'),
+    url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
