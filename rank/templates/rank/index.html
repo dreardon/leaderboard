@@ -11,9 +11,14 @@
 <div class="jumbotron text-center">
     <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
 </div>
-{% comment %}Last Updated:{% endcomment %}
+
 <div class="container-fluid">
- <div id="mix-wrapper">
+    <div class="row text-right">
+        <div class="col-lg-12">
+            Last Updated: {{ lastModified | date:'Y-m-d P'}}
+        </div>
+    </div>
+    <div id="mix-wrapper">
     {% for team in currentStandings%}
         <div class="card mix-target" data-order={{ team.total_points }}>
             <div class="row text-center">

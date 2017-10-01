@@ -19,7 +19,8 @@ def ranking(request):
     currentStandings = Team.objects.filter(isActive=True,ranking__criteria__isActive=True,ranking__sprint__isActive=True)\
         .values('name','profile_pic','id')\
         .annotate(total_points=Sum('ranking__points')).order_by('-total_points')
-    context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings}
+    lastModified = Ranking.objects.filter(sprint__isActive=True).values_list('lastModified', flat=True).order_by('lastModified')[0]
+    context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings,'lastModified':lastModified}
     return render(request, 'rank/index.html', context)
 
 def teamSprintDates(request):

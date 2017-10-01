@@ -86,6 +86,11 @@ function buildTeamLeaderGraph() {
         type: 'line',
         data: LeaderGraphData,
         options: {
+            legend: {
+                labels: {
+                    fontColor: '#000000'
+                }
+            },
             maintainAspectRatio: true,
              scales: {
                  xAxes: [{
@@ -108,12 +113,17 @@ function buildTeamLeaderGraph() {
           }
     });
 
-    $(".rankingPoints").each(function () {
+    var colors = ['rgba(7,74,79,0.6)','rgba(87,29,229,0.2)','rgba(3,18,47,0.2)','rgba(32,12,85,0.6)']
+    $(".rankingPoints").each(function (index) {
         var randomColor = random_rgba()
         var teamName = $(this).attr('teamname')
         d3.json('/api/teamSprintPoints/' + $(this).attr('teamid')+'/', function (error, data) {
-            addData(lineChart,teamName,randomColor,data);
+            //console.log(teamName + ' ' + randomColor)
+            console.log(teamName + ' ' + colors[index])
+            addData(lineChart,teamName,colors[index],data);
+            //addData(lineChart,teamName,randomColor,data);
         });
+
     });
 };
 
