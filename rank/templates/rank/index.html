@@ -44,7 +44,7 @@
 </div>
 <img src="{% static "img/refresh.png" %}" height="16px" width="16px" onclick="updateRankingPage();"/>
 <a href="/dataentry"><img src="{% static "img/dataentry.png" %}" height="16px" width="16px"/></a>
-{% comment %}<canvas id="myChart" width="1455" height="200"></canvas>{% endcomment %}
+
 <canvas id="lineChart" width="1455" height="200"></canvas>
 
   </body>
@@ -60,8 +60,7 @@
 <script>
 
 d3.json("api/teamSprintDates/", function (error, dateData) {
-     window.labeldata = dateData
-    buildTeamLeaderGraph()
+    buildTeamLeaderGraph(dateData)
 });
 
 </script>

@@ -75,9 +75,9 @@ function addData(chart, label, color, data) {
     chart.update();
 }
 
-function buildTeamLeaderGraph() {
+function buildTeamLeaderGraph(dateData) {
     var LeaderGraphData = {
-        labels: labeldata,
+        labels: dateData,
         datasets: []
     }
 
@@ -96,6 +96,7 @@ function buildTeamLeaderGraph() {
                  xAxes: [{
                      type: 'time',
                      time: {
+                         unit: 'day',
                          displayFormats: {
                              'millisecond': 'MMM DD',
                              'second': 'MMM DD',
@@ -107,8 +108,8 @@ function buildTeamLeaderGraph() {
                              'quarter': 'MMM DD',
                              'year': 'MMM DD',
                          }
-                     }
-                 }]
+                     },
+                 }],
              }
           }
     });
