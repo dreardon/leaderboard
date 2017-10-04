@@ -39,3 +39,11 @@ class Ranking(models.Model):
 
     def __str__(self):
         return "{0} {1} {2} {3} {4}".format(self.sprint,self.team,self.criteria,self.points,self.dataDate)
+
+class SystemMessage(models.Model):
+    content = models.TextField(null=False, blank=False)
+    isActive = models.BooleanField()
+    lastModified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{0} {1}".format(self.isActive,self.lastModified)

@@ -119,10 +119,7 @@ function buildTeamLeaderGraph(dateData) {
         var randomColor = random_rgba()
         var teamName = $(this).attr('teamname')
         d3.json('/api/teamSprintPoints/' + $(this).attr('teamid')+'/', function (error, data) {
-            //console.log(teamName + ' ' + randomColor)
-            console.log(teamName + ' ' + colors[index])
             addData(lineChart,teamName,colors[index],data);
-            //addData(lineChart,teamName,randomColor,data);
         });
 
     });

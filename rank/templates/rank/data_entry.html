@@ -3,9 +3,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   <body class="background">
-<a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
-  <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
-</a>
+   <div class="row">
+        <div class="col-lg-2">
+  <a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
+      <span class="glyphicon glyphicon-home" aria-hidden="false"></span></a>
+
+        </div>
+        <div class="col-lg-9 text-right">
+             <a href="{% url 'systemmessages' %}" class="btn btn-default">System Messages</a>
+        </div>
+   </div>
 
 <div class="container-fluid">
     <div class="row">

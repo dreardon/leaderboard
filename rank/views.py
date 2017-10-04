@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Team, Criteria, Ranking, Sprint
-from django.shortcuts import redirect, render, reverse
-from .forms import RankingForm
+from .models import Team, Criteria, Ranking, Sprint, SystemMessage
+from django.shortcuts import redirect, render, reverse, get_object_or_404
+from .forms import RankingForm, SystemMessageForm
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime
@@ -15,12 +15,16 @@ import time
 
 def ranking(request):
     currentSprint = Sprint.objects.filter(isActive=True)[0]
+    try:
+        activeMessage = SystemMessage.objects.filter(isActive=True).values_list('content',flat=True)[0]
+    except (SystemMessage.DoesNotExist, IndexError) as e:
+        activeMessage = None
     activeTeams = Team.objects.filter(isActive=True).order_by('-drawing__drawingDate')
     currentStandings = Team.objects.filter(isActive=True,ranking__criteria__isActive=True,ranking__sprint__isActive=True)\
         .values('name','profile_pic','id')\
         .annotate(total_points=Sum('ranking__points')).order_by('-total_points')
     lastModified = Ranking.objects.filter(sprint__isActive=True).values_list('lastModified', flat=True).order_by('-lastModified')[0]
-    context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings,'lastModified':lastModified}
+    context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings,'lastModified':lastModified,'activeMessage':activeMessage}
     return render(request, 'rank/index.html', context)
 
 def teamSprintDates(request):
@@ -114,6 +118,61 @@ def dataEntry(request, template_name='rank/data_entry.html'):
         return render(request, template_name, {
             'rankingform': form,'sprintDetail':sprintDetail, 'render_form': True
         })
+
+def systemMessage(request, template_name='rank/system_message.html'):
+
+    systemmessages = SystemMessage.objects.filter().values('id','lastModified','isActive','content').order_by('-lastModified')
+    id = request.POST.get('messageid', None)
+    if id != None:
+        systemmessage = get_object_or_404(SystemMessage, id=id)
+    else:
+        systemmessage = SystemMessage()
+    if request.POST:
+        form = SystemMessageForm(request.POST,instance=systemmessage)
+        if form.is_valid():
+            active = request.POST.get("isActive", False)
+            if active == 'on':
+                active = True
+            else:
+                active = False
+            defaults = {'content': request.POST['content'], 'isActive': active}
+            try:
+                obj = SystemMessage.objects.get(content=request.POST['content'])
+                for key, value in defaults.items():
+                    setattr(obj, key, value)
+                obj.save()
+                messages.success(request, 'The setting was updated!')
+                redirect_url = reverse('systemmessages')
+                return redirect(redirect_url)
+            except SystemMessage.DoesNotExist:
+                form.save()
+                messages.success(request, 'The new setting was updated!')
+                redirect_url = reverse('systemmessages')
+                return redirect(redirect_url)
+    else:
+        form = SystemMessageForm(instance=systemmessage)
+        return render(request, template_name, {
+            'systemmessageform': form,'systemmessages':systemmessages, 'render_form': True
+        })
+
+def editSystemMessage(request, template_name='rank/system_message.html',**kwargs):
+    systemmessages = SystemMessage.objects.filter().values('id','lastModified','isActive','content').order_by('-lastModified')
+    systemmessageid = kwargs['messageid']
+    systemmessage = SystemMessage.objects.get(pk=systemmessageid)
+    form = SystemMessageForm(instance=systemmessage)
+    return render(request, template_name, {
+        'systemmessageform': form, 'systemmessages':systemmessages, 'render_form': True
+    })
+
+def deleteSystemMessage(request,**kwargs):
+    systemmessageid = kwargs['messageid']
+    try:
+        r = SystemMessage.objects.get(pk=systemmessageid)
+        r.delete()
+        messages.success(request, 'The message was deleted')
+    except SystemMessage.DoesNotExist:
+        return redirect("systemmessages")
+    return redirect("systemmessages")
 
 def editRanking(request, template_name='rank/data_entry.html',**kwargs):
     sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')

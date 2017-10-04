@@ -42,10 +42,14 @@
     <button id="randomSort" class="sort-btn hidden" data-sort="random">Random</button>
     <button id="descendingSort" class="sort-btn hidden" data-sort="order:desc">Descending</button>
 </div>
+
+<canvas id="lineChart" width="1455" height="200"></canvas>
+{% if activeMessage%}
+    {{ activeMessage|safe  }}
+{% endif %}
 <img src="{% static "img/refresh.png" %}" height="16px" width="16px" onclick="updateRankingPage();"/>
 <a href="/dataentry"><img src="{% static "img/dataentry.png" %}" height="16px" width="16px"/></a>
 
-<canvas id="lineChart" width="1455" height="200"></canvas>
 
   </body>
 
@@ -58,11 +62,13 @@
         <script src="{% static "site/rank.js" %}"></script>
 
 <script>
-
-d3.json("api/teamSprintDates/", function (error, dateData) {
-    buildTeamLeaderGraph(dateData)
-});
-
+{% if activeMessage%}
+    $( "#lineChart" ).remove();
+{% else %}
+    d3.json("api/teamSprintDates/", function (error, dateData) {
+        buildTeamLeaderGraph(dateData)
+    });
+{% endif %}
 </script>
 
 
