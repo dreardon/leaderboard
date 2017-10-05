@@ -121,7 +121,7 @@ def dataEntry(request, template_name='rank/data_entry.html'):
 
 def systemMessage(request, template_name='rank/system_message.html'):
 
-    systemmessages = SystemMessage.objects.filter().values('id','lastModified','isActive','content').order_by('-lastModified')
+    systemmessages = SystemMessage.objects.filter().values('id','name','lastModified','isActive','content').order_by('-lastModified')
     id = request.POST.get('messageid', None)
     if id != None:
         systemmessage = get_object_or_404(SystemMessage, id=id)
@@ -135,9 +135,9 @@ def systemMessage(request, template_name='rank/system_message.html'):
                 active = True
             else:
                 active = False
-            defaults = {'content': request.POST['content'], 'isActive': active}
+            defaults = {'content': request.POST['content'], 'isActive': active, 'name': request.POST['name']}
             try:
-                obj = SystemMessage.objects.get(content=request.POST['content'])
+                obj = SystemMessage.objects.get(name=request.POST['name'])
                 for key, value in defaults.items():
                     setattr(obj, key, value)
                 obj.save()
@@ -156,7 +156,7 @@ def systemMessage(request, template_name='rank/system_message.html'):
         })
 
 def editSystemMessage(request, template_name='rank/system_message.html',**kwargs):
-    systemmessages = SystemMessage.objects.filter().values('id','lastModified','isActive','content').order_by('-lastModified')
+    systemmessages = SystemMessage.objects.filter().values('id','name','lastModified','isActive','content').order_by('-lastModified')
     systemmessageid = kwargs['messageid']
     systemmessage = SystemMessage.objects.get(pk=systemmessageid)
     form = SystemMessageForm(instance=systemmessage)

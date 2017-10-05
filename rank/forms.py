@@ -32,8 +32,14 @@ class SystemMessageForm(forms.ModelForm):
     helper.form_method = 'POST'
     helper.form_action = 'systemmessages'
     helper.layout = Layout(
+        Field('name'),
         Field('content', css_class='input-xlarge'),
         Field('isActive'),
 
     )
     helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
+    helper.add_input(
+    Button('shpreview', "Show Preview", css_class='btn', onclick="showPreview()"))
+    helper.add_input(
+    Button('rmpreview', "Remove Preview", css_class='btn hidden', onclick="removePreview()"))
+
