@@ -17,7 +17,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
         var ctx = document.getElementById(canvasElement);
         ctx.height = 75;
         var myChart = new Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
             labels: labeldata,
             datasets: [{
