@@ -1,9 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
+from crispy_forms.bootstrap import AppendedText
 from crispy_forms.layout import Layout, ButtonHolder, Fieldset, Div, Submit, HTML, Button, Row, Field
 from .models import Ranking, SystemMessage
 from django.core.urlresolvers import reverse
+from datetime import date
 
 class RankingForm(forms.ModelForm):
     class Meta:
@@ -14,15 +16,16 @@ class RankingForm(forms.ModelForm):
     helper.form_method = 'POST'
     helper.form_action = 'dataentry'
     helper.layout = Layout(
-        Field('sprint', css_class='input-xlarge'),
-        Field('team', css_class='input-xlarge'),
-        Field('criteria', rows="3", css_class='input-xlarge'),
-        Field('points', style="background: #FAFAFA; padding: 10px;"),
-        Field('dataDate', id="dataDate",
-              template='rank/datepicker.html')
+
     )
     helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
-
+    helper.layout = Layout(
+        Field('sprint'),
+        Field('team'),
+        Field('criteria'),
+        Field('points'),
+        AppendedText('dataDate', '<span class="glyphicon glyphicon-calendar"></span>', active=True)
+    )
 class SystemMessageForm(forms.ModelForm):
     class Meta:
         model = SystemMessage

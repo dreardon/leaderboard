@@ -1,6 +1,8 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap-datetimepicker-standalone.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   <body class="background">
    <div class="row">
@@ -55,3 +57,15 @@
 </div>
 
 </body>
+
+<script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
+<script src="{% static "vendor/moment/moment.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/bootstrap-datetimepicker.min.js" %}"></script>
+ <script type="text/javascript">
+    $(function () {
+        $('#id_dataDate').datetimepicker({
+            format: 'Y-MM-DD',
+            defaultDate: moment().format('YYYY-MM-DD')
+        });
+    });
+</script>
