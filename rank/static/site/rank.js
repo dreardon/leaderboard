@@ -19,7 +19,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
         var ctx = document.getElementById(canvasElement);
         ctx.height = 75;
         var myChart = new Chart(ctx, {
-          type: 'line',
+          type: 'bar',
           data: {
             labels: labeldata,
             datasets: [{
@@ -40,6 +40,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
              scales: {
                  xAxes: [{
                      type: 'time',
+                     maxBarThickness: 50,
                      time: {
                          unit: 'day',
                          displayFormats: {
