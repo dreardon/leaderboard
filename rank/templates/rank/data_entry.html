@@ -60,12 +60,16 @@
 
 <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
 <script src="{% static "vendor/moment/moment.min.js" %}"></script>
+<script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
 <script src="{% static "vendor/bootstrap/bootstrap-datetimepicker.min.js" %}"></script>
  <script type="text/javascript">
-    $(function () {
+   $(document).ready(function() {
         $('#id_dataDate').datetimepicker({
             format: 'Y-MM-DD',
             defaultDate: moment().format('YYYY-MM-DD')
+        });
+        $('.input-group-addon').click(function() {
+            $("#id_dataDate").focus();
         });
     });
 </script>
