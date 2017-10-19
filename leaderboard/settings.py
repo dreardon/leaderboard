@@ -128,3 +128,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y')
+
+X_FRAME_OPTIONS = 'ALLOW'
