@@ -178,3 +178,13 @@ mixitup('#mix-wrapper', {
     target: '.mix-target'
   }
 });
+
+
+function loadCommits() {
+    $.getJSON("media/commits.json", function (data) {
+        var items = [];
+        $.each(data, function (key, val) {
+            alert(key+val);
+        });
+    });
+};

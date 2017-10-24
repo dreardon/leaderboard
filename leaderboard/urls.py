@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from rank import views
+from rank.views import editSprint, deleteSprint
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -34,4 +35,7 @@ urlpatterns = [
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
     url(r'^api/teamSprintDates/', views.teamSprintDates, name='teamSprintDates'),
     url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),
+    url(r'^sprints/', views.sprints, name='sprints'),
+    url(r'^sprint/edit/(?P<sprintid>[0-9]+)/$', views.editSprint, name='editsprint'),
+    url(r'^sprint/delete/(?P<sprintid>[0-9]+)/$', views.deleteSprint, name='deletesprint'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

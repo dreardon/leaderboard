@@ -79,6 +79,13 @@
     border-radius:3px;
 }
 
+#SprintForm {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid white;
+    border-radius:3px;
+}
+
 .ActiveInactiveHeader {
     font-size: 30px;
 }
@@ -86,4 +93,60 @@
 .blur {
   -webkit-filter: blur(8px);filter:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' ><filter id='blur5'><feGaussianBlur in='SourceGraphic' stdDeviation='5' /></filter></svg>#blur5");
   filter:blur(8px);
+}
+
+.nav {
+  background: #2c3e50;
+  position: relative;
+  z-index: 1000;
+  height: 30px;
+}
+
+.nav .main-nav .hamburger-nav::after {
+  font-family: fontawesome;
+  content: "\f0c9";
+  color: #fafafa;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+}
+
+.nav .main-nav .menu {
+  display: none;
+  list-style: none;
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  padding-left: 0;
+  width: 25%;
+  overflow: hidden;
+}
+
+.nav .main-nav .menu a {
+  display: block;
+  background: #1c2d4a;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 0.5px solid rgba(200, 200, 200, 0.2);
+}
+
+.nav .main-nav .menu a:hover {
+  background: white;
+  transition: background 0.3s ease;
+}
+
+.nav .main-nav .menu a:hover li {
+  background: #244784;
+}
+
+.nav .main-nav .menu a li {
+  color: white;
+  text-transform: uppercase;
+  font-family: Montserrat, sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
 }

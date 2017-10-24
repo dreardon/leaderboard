@@ -2,10 +2,25 @@
 {% load crispy_forms_tags %}
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/fontawesome/font-awesome.min.css' %}" />
+      <link rel="icon" href="data:,">
   <body class="background">
-  <a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
-      <span class="glyphicon glyphicon-home" aria-hidden="false"></span></a>
+   <div class="row">
+        <div class="col-lg-12">
+            <div class="nav">
+              <div class="main-nav">
+                <a class="hamburger-nav"></a>
+                <ul class="menu">
+                    <li><a href="{% url 'ranking' %}">Home</a></li>
+                    <li><a href="{% url 'dataentry' %}">Data Entry</a></li>
+                    <li><a href="{% url 'sprints' %}">Sprints</a></li>
+                    <li><a href="{% url 'systemmessages' %}">System Messages</a></li>
+                </ul>
+              </div>
+            </div>
 
+        </div>
+   </div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6 text-center">
@@ -60,5 +75,16 @@ function removePreview() {
     $("#button-id-shpreview").prop('value', 'Show Preview');
     $("#button-id-rmpreview").addClass( "hidden" );
 }
+
+  $(document).ready(function() {
+      $(".hamburger-nav").on("click", function(){
+
+        $(".menu").animate({
+          height: 'toggle'
+        });
+
+      });
+
+    });
 
 </script>

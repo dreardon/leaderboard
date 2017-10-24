@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from .models import Team, Criteria, Ranking, Sprint, SystemMessage
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from django.shortcuts import redirect, render, reverse, get_object_or_404
-from .forms import RankingForm, SystemMessageForm
+from .forms import RankingForm, SystemMessageForm, SprintForm
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime
@@ -191,3 +193,63 @@ def deleteRanking(request,**kwargs):
     except Ranking.DoesNotExist:
         return redirect("dataentry")
     return redirect("dataentry")
+
+def sprints(request, template_name='rank/sprints.html'):
+
+    sprints = Sprint.objects.filter().values('id','name','isActive',).order_by('-name')
+    id = request.POST.get('editid',None)
+    if id == 'None':
+        id = None
+    if id != None:
+        sprint = get_object_or_404(Sprint, id=id)
+    else:
+        sprint = Sprint()
+    if request.POST:
+        form = SprintForm(request.POST,instance=sprint)
+        if form.is_valid():
+            active = request.POST.get("isActive", False)
+            if active == 'on':
+                active = True
+            else:
+                active = False
+            defaults = {'isActive': active, 'name': request.POST['name'],'id': request.POST['editid']}
+            try:
+                if id == None:
+                    form.save()
+                    messages.success(request, 'The new sprint was updated!')
+                    redirect_url = reverse('sprints')
+                    return redirect(redirect_url)
+                else:
+                    obj = Sprint.objects.get(id=request.POST['editid'])
+                    for key, value in defaults.items():
+                        setattr(obj, key, value)
+                    obj.save()
+                    messages.success(request, 'The sprint was updated!')
+                    redirect_url = reverse('sprints')
+                    return redirect(redirect_url)
+            except:
+                return redirect(redirect_url)
+
+    else:
+        form = SprintForm(instance=sprint)
+        return render(request, template_name, {
+            'form': form,'sprints':sprints, 'render_form': True
+        })
+
+def editSprint(request, template_name='rank/sprints.html',**kwargs):
+    sprints= Sprint.objects.filter().values('id','name','isActive').order_by('-name')
+    sprintId = kwargs['sprintid']
+    sprint = Sprint.objects.get(pk=sprintId)
+    form = SprintForm(instance=sprint)
+    return render(request, template_name, {
+        'form': form, 'sprints':sprints, 'render_form': True
+    })
+
+def deleteSprint(request,**kwargs):
+    sprintId = kwargs['sprintid']
+    try:
+        r = Sprint.objects.get(pk=sprintId)
+        r.delete()
+    except Sprint.DoesNotExist:
+        return redirect("sprints")
+    return redirect("sprints")

@@ -2,9 +2,8 @@
 {% load crispy_forms_tags %}
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/bootstrap-datetimepicker-standalone.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'vendor/fontawesome/font-awesome.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'vendor/fontawesome/font-awesome.min.css' %}" />
       <link rel="icon" href="data:,">
   <body class="background">
    <div class="row">
@@ -27,8 +26,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-3">
-              <div id="dataEntryForm">
-                    {% crispy rankingform  %}
+              <div id="sprintForm">
+
+                  <form action="/sprints/" method="post">
+                    {% crispy form  %}
+                      <input type="hidden" name="editid" value= {{ form.instance.id }}>
+                  </form>
               </div>
         </div>
         <div class="col-lg-9">
@@ -38,24 +41,20 @@
             <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Sprint</th>
-                    <th>Date</th>
-                    <th>Criteria</th>
-                      <th>Team</th>
-                      <th>Points</th>
+                      <th>ID</th>
+                    <th>Name</th>
+                    <th>Active</th>
                       <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                {% for entry in sprintDetail%}
+                {% for entry in sprints%}
                 <tr>
-                    <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
-                    <td><div class="dateDetail">{{ entry.dataDate|date:'m-d-y' }}</div></td>
-                      <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
-                      <td><div class="teamDetail">{{ entry.team__name }}</div></td>
-                    <td><div class="teamDetail">{{ entry.points }}</div></td>
-                    <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
-                    <a href="{% url 'editranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
+                    <td><div>{{ entry.id }}</div></td>
+                    <td><div>{{ entry.name }}</div></td>
+                      <td><div>{{ entry.isActive }}</div></td>
+                    <td><a href="{% url 'deletesprint' sprintid=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
+                    <a href="{% url 'editsprint' sprintid=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
                   </tr>
                {% endfor %}
                 </tbody>
@@ -69,17 +68,9 @@
 <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
 <script src="{% static "vendor/moment/moment.min.js" %}"></script>
 <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
-<script src="{% static "vendor/bootstrap/bootstrap-datetimepicker.min.js" %}"></script>
- <script type="text/javascript">
-   $(document).ready(function() {
-        $('#id_dataDate').datetimepicker({
-            format: 'Y-MM-DD',
-            defaultDate: moment().format('YYYY-MM-DD')
-        });
-        $('.input-group-addon').click(function() {
-            $("#id_dataDate").focus();
-        });
+<script type="text/javascript">
 
+  $(document).ready(function() {
       $(".hamburger-nav").on("click", function(){
 
         $(".menu").animate({
@@ -89,4 +80,5 @@
       });
 
     });
+
 </script>
