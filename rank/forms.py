@@ -24,7 +24,8 @@ class RankingForm(forms.ModelForm):
         Field('team'),
         Field('criteria'),
         Field('points'),
-        AppendedText('dataDate', '<span class="glyphicon glyphicon-calendar"></span>', active=True)
+        AppendedText('dataDate', '<span class="glyphicon glyphicon-calendar"></span>', active=True),
+        Field('comment')
     )
 class SystemMessageForm(forms.ModelForm):
     class Meta:

@@ -12,6 +12,7 @@ from django.utils.formats import get_format
 from django.contrib import messages
 from datetime import date, timedelta
 import time
+import requests
 
 
 
@@ -84,19 +85,19 @@ def teamSprintTrend(request,**kwargs):
 
 def sprintDetails(request,**kwargs):
     sprintid = kwargs['sprintid']
-    sprintDetails= Ranking.objects.filter(sprint_id=sprintid).values('dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
+    sprintDetails= Ranking.objects.filter(sprint_id=sprintid).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
     context = {'sprintDetails': sprintDetails,'title':'Sprint Detail'}
     return render(request, 'rank/sprint.html', context)
 
 def teamDetails(request,**kwargs):
     teamId = kwargs['teamId']
-    teamDetailsActive= Ranking.objects.filter(team_id=teamId,sprint__isActive=1).values('dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate')
-    teamDetailsInactive= Ranking.objects.filter(team_id=teamId,sprint__isActive=0).values('dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate','sprint__name')
+    teamDetailsActive= Ranking.objects.filter(team_id=teamId,sprint__isActive=1).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate')
+    teamDetailsInactive= Ranking.objects.filter(team_id=teamId,sprint__isActive=0).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate','sprint__name')
     context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail'}
     return render(request, 'rank/team.html', context)
 
 def dataEntry(request, template_name='rank/data_entry.html'):
-    sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
+    sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','comment','criteria__name','team__name','sprint__name','comment').order_by('-dataDate', 'team__name')
     entry = Ranking()
     if request.POST:
         form = RankingForm(request.POST,instance=entry)
@@ -177,7 +178,7 @@ def deleteSystemMessage(request,**kwargs):
     return redirect("systemmessages")
 
 def editRanking(request, template_name='rank/data_entry.html',**kwargs):
-    sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
+    sprintDetail= Ranking.objects.filter(criteria__isActive=True,sprint__isActive=True,team__isActive=True).values('id','dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate', 'team__name')
     rankingId = kwargs['rankingId']
     ranking = Ranking.objects.get(pk=rankingId)
     form = RankingForm(instance=ranking)
@@ -253,3 +254,7 @@ def deleteSprint(request,**kwargs):
     except Sprint.DoesNotExist:
         return redirect("sprints")
     return redirect("sprints")
+
+def updateCommits():
+    response = requests.get('http://thedataishere.com', auth=('user', 'password'))
+    data = response.json()

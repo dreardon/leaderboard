@@ -35,6 +35,7 @@ class Ranking(models.Model):
     criteria = models.ForeignKey(Criteria, null=False, blank=False)
     points = models.DecimalField(default=0.0, max_digits=5, decimal_places=1)
     dataDate = models.DateField(null=False, blank=False)
+    comment = models.TextField(null=True,blank=True)
     lastModified = models.DateTimeField(auto_now=True)
 
     def __str__(self):

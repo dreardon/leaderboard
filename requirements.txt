@@ -2,3 +2,4 @@ django
 django-debug-toolbar
 Pillow
 django-crispy-forms
+requests

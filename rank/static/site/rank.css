@@ -150,3 +150,37 @@
   font-size: 0.8rem;
   letter-spacing: 1px;
 }
+
+table {
+    white-space: nowrap;
+}
+.entryComment {
+    display: inline-block;
+    max-width: 50px;
+    min-width: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.sprintComment {
+    display: inline-block;
+    max-width: 340px;
+    min-width: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+
+.teamComment {
+    display: inline-block;
+    max-width: 400px;
+    min-width: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}

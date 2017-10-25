@@ -25,7 +25,7 @@
         <th>Sprints</th>
         <th>Date</th>
         <th>Criteria</th>
-          <th>Team</th>
+          <th>Comment</th>
           <th>Points</th>
       </tr>
     </thead>
@@ -35,7 +35,7 @@
         <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
         <td><div class="dateDetail">{{ entry.dataDate|date:'m-d-y' }}</div></td>
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
-          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+          <td><div class="teamComment">{{ entry.comment|default_if_none:""  }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>
       </tr>
    {% endfor %}
@@ -52,7 +52,7 @@
         <th>Sprint</th>
         <th>Date</th>
         <th>Criteria</th>
-          <th>Team</th>
+          <th>Comment</th>
           <th>Points</th>
       </tr>
     </thead>
@@ -62,7 +62,7 @@
         <td><div class="pointDetail">{{ entry.sprint__name }}</div></td>
         <td><div class="dateDetail">{{ entry.dataDate }}</div></td>
           <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
-          <td><div class="teamDetail">{{ entry.team__name }}</div></td>
+          <td><div class="teamComment">{{ entry.comment|default_if_none:""  }}</div></td>
         <td><div class="teamDetail">{{ entry.points }}</div></td>
       </tr>
    {% endfor %}
@@ -75,4 +75,17 @@
 
       <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
   <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+
+<script>
+         $(document).on('mouseenter', ".teamComment", function () {
+     var $this = $(this);
+     if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+         $this.tooltip({
+             title: $this.text(),
+             placement: "bottom"
+         });
+         $this.tooltip('show');
+     }
+ });
+</script>
 </html>

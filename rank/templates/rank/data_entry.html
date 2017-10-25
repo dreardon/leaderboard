@@ -43,6 +43,7 @@
                     <th>Criteria</th>
                       <th>Team</th>
                       <th>Points</th>
+                      <th>Comment</th>
                       <th>Actions</th>
                   </tr>
                 </thead>
@@ -53,7 +54,8 @@
                     <td><div class="dateDetail">{{ entry.dataDate|date:'m-d-y' }}</div></td>
                       <td><div class="criteriaDetail">{{ entry.criteria__name }}</div></td>
                       <td><div class="teamDetail">{{ entry.team__name }}</div></td>
-                    <td><div class="teamDetail">{{ entry.points }}</div></td>
+                    <td><div class="teamPoints">{{ entry.points }}</div></td>
+                     <td><div class="entryComment">{{ entry.comment|default_if_none:"" }}</div></td>
                     <td><a href="{% url 'deleteranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Delete</a>
                     <a href="{% url 'editranking' rankingId=entry.id %}" class="btn btn-primary btn-sm">Edit</a></td>
                   </tr>
@@ -87,6 +89,17 @@
         });
 
       });
+
+     $(document).on('mouseenter', ".entryComment", function () {
+     var $this = $(this);
+     if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+         $this.tooltip({
+             title: $this.text(),
+             placement: "bottom"
+         });
+         $this.tooltip('show');
+     }
+ });
 
     });
 </script>
