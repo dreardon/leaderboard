@@ -102,7 +102,7 @@ def dataEntry(request, template_name='rank/data_entry.html'):
     if request.POST:
         form = RankingForm(request.POST,instance=entry)
         if form.is_valid():
-            defaults = {'points': request.POST['points']}
+            defaults = {'points': request.POST['points'], 'comment': request.POST['comment']}
             try:
                 obj = Ranking.objects.get(sprint=request.POST['sprint'],team=request.POST['team'],criteria=request.POST['criteria'],dataDate=request.POST['dataDate'])
                 for key, value in defaults.items():
