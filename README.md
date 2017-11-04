@@ -20,5 +20,7 @@ Run migrations:
 
 Finally, after creating a Django super user, log in to the admin screen, add teams and ranking results
 
+You can override settings.py by creating a local_settings.py in the same directory.
+
 [0]: https://www.python.org/
 [1]: https://www.djangoproject.com/

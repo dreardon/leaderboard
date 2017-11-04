@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'leaderboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db_settings.sqlite3'),
     }
 }
 
@@ -130,3 +130,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DATE_INPUT_FORMATS = ('%d-%m-%Y')
 
 X_FRAME_OPTIONS = 'ALLOW'
+
+GITLAB_SERVER="http://gitlab.com/"
+GITLAB_PRIVATE_TOKEN = "enter_your_token"
+CODE_COMMIT_DISPLAY_ENABLED = True
+INITIAL_COMMIT_LOAD = 30
+
+try:
+    exec(open('leaderboard/local_settings.py').read())
+    print('Using local_settings.py file')
+except OSError as e:
+    print('Using default settings.py file')
+

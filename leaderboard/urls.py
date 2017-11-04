@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.ranking, name='ranking'),
     url(r'^dataentry/', views.dataEntry, name='dataentry'),
+    url(r'^updatecommits/', views.updateCommits, name='updatecommits'),
     url(r'^ranking/delete/(?P<rankingId>[0-9]+)/$', views.deleteRanking, name='deleteranking'),
     url(r'^ranking/edit/(?P<rankingId>[0-9]+)/$', views.editRanking, name='editranking'),
     url(r'^systemmessages/', views.systemMessage, name='systemmessages'),
@@ -38,4 +39,7 @@ urlpatterns = [
     url(r'^sprints/', views.sprints, name='sprints'),
     url(r'^sprint/edit/(?P<sprintid>[0-9]+)/$', views.editSprint, name='editsprint'),
     url(r'^sprint/delete/(?P<sprintid>[0-9]+)/$', views.deleteSprint, name='deletesprint'),
+    url(r'^commits/', views.getCommits, name='teamcommits'),
+    url(r'^commits/(?P<teamid>[0-9]+)/$', views.getCommits, name='commits'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

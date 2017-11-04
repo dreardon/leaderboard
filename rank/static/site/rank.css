@@ -184,3 +184,14 @@ table {
     vertical-align: top;
     white-space: nowrap;
 }
+
+.marquee {
+  overflow: hidden;
+  background: #1c2d4a;
+  border:1px solid #ccc;
+  color: white;
+}
+
+.marquee-element {
+    padding-left: 50px;
+}

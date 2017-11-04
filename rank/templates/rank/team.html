@@ -10,11 +10,18 @@
 
   <body class="background">
 <div class="jumbotron text-center">
-  <h1>{{ teamDetailsActive.0.team__name }} </h1>
+    <img src="../../../media/{{ teamData.profile_pic }}" />
+    <h1>{{ teamData.name }} </h1>
 </div>
 <a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
   <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
 </a><div class="container">
+
+<div class="row">
+     <div class="col-lg-12">
+     <canvas teamName = {{ teamData.name }} team={{ teamData.id }} id="teamCanvas{{ teamData.id }}" class='teamGraph' height="75"></canvas>
+     </div>
+</div>
 
 
 {% if teamDetailsActive %}
@@ -73,8 +80,13 @@
 </div>
   </body>
 
-      <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
-  <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+        <script src="{% static "vendor/jquery/jquery-3.2.1.min.js" %}"></script>
+        <script src="{% static "vendor/moment/moment.min.js" %}"></script>
+        <script src="{% static "vendor/d3/d3.v4.js" %}"></script>
+        <script src="{% static "vendor/chart/Chart.js" %}"></script>
+        <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+        <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
+        <script src="{% static "site/team.js" %}"></script>
 
 <script>
          $(document).on('mouseenter', ".teamComment", function () {

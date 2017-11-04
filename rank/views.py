@@ -1,19 +1,14 @@
-from django.shortcuts import render
-from .models import Team, Criteria, Ranking, Sprint, SystemMessage
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.conf import settings
+from django.core import serializers
+from .models import Team, Criteria, Ranking, Sprint, SystemMessage, SourceCommit
 from django.shortcuts import redirect, render, reverse, get_object_or_404
 from .forms import RankingForm, SystemMessageForm, SprintForm
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime
-from django.utils.dateformat import DateFormat
-from django.utils.formats import get_format
 from django.contrib import messages
 from datetime import date, timedelta
-import time
 import requests
-
 
 
 def ranking(request):
@@ -27,7 +22,13 @@ def ranking(request):
         .values('name','profile_pic','id')\
         .annotate(total_points=Sum('ranking__points')).order_by('-total_points')
     lastModified = Ranking.objects.filter(sprint__isActive=True).values_list('lastModified', flat=True).order_by('-lastModified')[0]
-    context = {'activeTeams': activeTeams,'currentSprint':currentSprint,'currentStandings':currentStandings,'lastModified':lastModified,'activeMessage':activeMessage}
+    sourceServer = settings.GITLAB_SERVER
+    codeCommitEnabled = settings.CODE_COMMIT_DISPLAY_ENABLED
+    commits = SourceCommit.objects.filter().values('authored_date', 'message', 'author_name', 'short_id', 'long_id',
+                                                   'path_with_namespace').order_by('-committed_date')[:20]
+    context = {'activeTeams': activeTeams, 'currentSprint': currentSprint, 'currentStandings': currentStandings, \
+               'lastModified': lastModified, 'activeMessage': activeMessage, 'commits': commits, \
+               'sourceServer': sourceServer, 'codeCommitEnabled': codeCommitEnabled}
     return render(request, 'rank/index.html', context)
 
 def teamSprintDates(request):
@@ -91,9 +92,10 @@ def sprintDetails(request,**kwargs):
 
 def teamDetails(request,**kwargs):
     teamId = kwargs['teamId']
+    teamData = Team.objects.get(id=teamId)
     teamDetailsActive= Ranking.objects.filter(team_id=teamId,sprint__isActive=1).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate')
     teamDetailsInactive= Ranking.objects.filter(team_id=teamId,sprint__isActive=0).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate','sprint__name')
-    context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail'}
+    context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail','teamData':teamData}
     return render(request, 'rank/team.html', context)
 
 def dataEntry(request, template_name='rank/data_entry.html'):
@@ -255,6 +257,44 @@ def deleteSprint(request,**kwargs):
         return redirect("sprints")
     return redirect("sprints")
 
-def updateCommits():
-    response = requests.get('http://thedataishere.com', auth=('user', 'password'))
-    data = response.json()
+def updateCommits(request,**kwargs):
+
+    def processCommits(queryDate):
+        projectUrl = settings.GITLAB_SERVER + 'api/v4/projects'
+        response = requests.get(projectUrl, headers={'PRIVATE_TOKEN':settings.GITLAB_PRIVATE_TOKEN})
+        projects = response.json()
+        for x in projects:
+            queryId = str(x['id']);
+            path_with_namespace = x['path_with_namespace']
+            commitListUrl = settings.GITLAB_SERVER+'api/v4/projects/'+queryId+'/repository/commits?since=' + queryDate
+            response = requests.get(commitListUrl, headers={'PRIVATE_TOKEN':settings.GITLAB_PRIVATE_TOKEN})
+            commits = response.json()
+            for x in commits:
+                commitData = SourceCommit()
+                commitData.long_id = x['id']
+                commitData.short_id = x['short_id']
+                commitData.title  = x['title']
+                commitData.message = x['message']
+                commitData.author_name = x['author_name']
+                commitData.author_email = x['author_email']
+                commitData.authored_date = x['authored_date']
+                commitData.committer_name = x['committer_name']
+                commitData.committer_email = x['committer_email']
+                commitData.committed_date = x['committed_date']
+                commitData.path_with_namespace = path_with_namespace
+                commitData.save()
+    try:
+        lastCommit = SourceCommit.objects.values('committed_date').latest('committed_date')
+        lastCommit = lastCommit['committed_date']
+        processCommits(lastCommit)
+    except (SourceCommit.DoesNotExist) as e:
+        loadDate = (datetime.now()+timedelta(days=-settings.INITIAL_COMMIT_LOAD)).strftime("%Y-%m-%dT%H:%M:%S.000+00:00")
+        processCommits(loadDate)
+    return redirect("ranking")
+
+def getCommits(request,team=None,**kwargs):
+    if team:
+        commits = serializers.serialize("json", SourceCommit.objects.filter(team=team).order_by('-committed_date')[:20])
+    else:
+        commits = serializers.serialize("json", SourceCommit.objects.filter().order_by('-committed_date')[:20])
+    return HttpResponse(commits)

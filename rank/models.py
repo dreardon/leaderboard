@@ -49,3 +49,18 @@ class SystemMessage(models.Model):
 
     def __str__(self):
         return "{0} {1} {2}".format(self.name, self.isActive,self.lastModified)
+
+class SourceCommit(models.Model):
+    long_id = models.TextField(null=False, blank=False)
+    short_id = models.TextField(null=False, blank=False)
+    title = models.TextField(null=False, blank=False)
+    message = models.TextField(null=False, blank=False)
+    author_name = models.TextField(null=False, blank=False)
+    author_email = models.TextField(null=False, blank=False)
+    authored_date = models.DateTimeField(null=False, blank=False)
+    committer_name = models.TextField(null=False, blank=False)
+    committer_email = models.TextField(null=False, blank=False)
+    committed_date = models.DateTimeField(null=False, blank=False)
+    path_with_namespace = models.TextField(null=True, blank=True)
+    def __str__(self):
+        return "{0} {1}".format(self.short_id, self.title)

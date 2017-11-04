@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load app_filters %}
 
 <html>
   <head>
@@ -42,7 +43,13 @@
     <button id="randomSort" class="sort-btn hidden" data-sort="random">Random</button>
     <button id="descendingSort" class="sort-btn hidden" data-sort="order:desc">Descending</button>
 </div>
-
+{% if codeCommitEnabled %}
+    <div class="marquee">
+        {% for x in commits %}
+            <span class="marquee-element">{{ x.authored_date }} {{ x.author_name }} {{ x.message|truncate_at_word }} <a href="{{ sourceServer }}{{ x.path_with_namespace }}/commits/{{ x.long_id }}" target="_blank">(link)</a></span>
+        {% endfor %}
+    </div>
+{% endif %}
 <canvas id="lineChart" width="1455" height="200"></canvas>
 {% if activeMessage%}
     {{ activeMessage|safe  }}
@@ -59,14 +66,25 @@
         <script src="{% static "vendor/chart/Chart.js" %}"></script>
         <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
         <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
+        <script src="{% static "vendor/marquee/jquery.marquee.js" %}"></script>
         <script src="{% static "site/rank.js" %}"></script>
 
 <script>
 {% if activeMessage%}
     $( "#lineChart" ).remove();
+    $( ".marquee" ).remove();
 {% else %}
     d3.json("api/teamSprintDates/", function (error, dateData) {
         buildTeamLeaderGraph(dateData)
+    });
+{% endif %}
+
+{% if codeCommitEnabled %}
+    $('.marquee').marquee({
+        duration: 30000,
+        direction: 'left',
+        duplicated: true,
+        pauseOnHover: true
     });
 {% endif %}
 </script>
