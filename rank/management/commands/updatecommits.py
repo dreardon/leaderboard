@@ -27,6 +27,7 @@ class Command(BaseCommand):
                     commitData.title = x['title']
                     commitData.message = x['message']
                     commitData.author_name = x['author_name']
+                    commitData.author_login = x['author_email'].split('@', 1)[0]
                     commitData.author_email = x['author_email']
                     commitData.authored_date = x['authored_date']
                     commitData.committer_name = x['committer_name']

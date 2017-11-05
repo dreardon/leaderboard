@@ -12,7 +12,13 @@
 <div class="jumbotron text-center">
     <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
 </div>
-
+{% if codeCommitEnabled %}
+    <div class="marquee">
+        {% for x in commits %}
+            <span class="marquee-element">{{ x.authored_date }} {{ x.author_name }} {{ x.message|truncate_at_word }} <a href="{{ sourceServer }}{{ x.path_with_namespace }}/commits/{{ x.long_id }}" target="_blank">(link)</a></span>
+        {% endfor %}
+    </div>
+{% endif %}
 <div class="container-fluid">
     <div class="row text-right">
         <div class="col-lg-12">
@@ -43,13 +49,7 @@
     <button id="randomSort" class="sort-btn hidden" data-sort="random">Random</button>
     <button id="descendingSort" class="sort-btn hidden" data-sort="order:desc">Descending</button>
 </div>
-{% if codeCommitEnabled %}
-    <div class="marquee">
-        {% for x in commits %}
-            <span class="marquee-element">{{ x.authored_date }} {{ x.author_name }} {{ x.message|truncate_at_word }} <a href="{{ sourceServer }}{{ x.path_with_namespace }}/commits/{{ x.long_id }}" target="_blank">(link)</a></span>
-        {% endfor %}
-    </div>
-{% endif %}
+
 <canvas id="lineChart" width="1455" height="200"></canvas>
 {% if activeMessage%}
     {{ activeMessage|safe  }}

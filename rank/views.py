@@ -95,7 +95,14 @@ def teamDetails(request,**kwargs):
     teamData = Team.objects.get(id=teamId)
     teamDetailsActive= Ranking.objects.filter(team_id=teamId,sprint__isActive=1).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate')
     teamDetailsInactive= Ranking.objects.filter(team_id=teamId,sprint__isActive=0).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate','sprint__name')
-    context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail','teamData':teamData}
+    sourceServer = settings.GITLAB_SERVER
+    codeCommitEnabled = settings.CODE_COMMIT_DISPLAY_ENABLED
+    members = list(Team.objects.filter(id = teamId).values_list('members',flat=True))[0].split(',')
+    members = [x for x in members if x != '']
+    teamcommits = SourceCommit.objects.filter(author_login__in=members).values('authored_date', 'message', 'author_name', 'short_id', 'long_id',
+                                                   'path_with_namespace').order_by('-committed_date')[:20]
+    context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail','teamData':teamData,
+               'teamcommits':teamcommits,'sourceServer':sourceServer,'codeCommitEnabled':codeCommitEnabled}
     return render(request, 'rank/team.html', context)
 
 def dataEntry(request, template_name='rank/data_entry.html'):
@@ -276,6 +283,7 @@ def updateCommits(request,**kwargs):
                 commitData.title  = x['title']
                 commitData.message = x['message']
                 commitData.author_name = x['author_name']
+                commitData.author_login = x['author_email'].split('@', 1)[0]
                 commitData.author_email = x['author_email']
                 commitData.authored_date = x['authored_date']
                 commitData.committer_name = x['committer_name']

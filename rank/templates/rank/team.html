@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load app_filters %}
 
 <html>
   <head>
@@ -13,16 +14,24 @@
     <img src="../../../media/{{ teamData.profile_pic }}" />
     <h1>{{ teamData.name }} </h1>
 </div>
+{% if codeCommitEnabled %}
+    <div class="marquee">
+        {% for x in teamcommits %}
+            <span class="marquee-element">{{ x.authored_date }} {{ x.author_name }} {{ x.message|truncate_at_word }} <a href="{{ sourceServer }}{{ x.path_with_namespace }}/commits/{{ x.long_id }}" target="_blank">(link)</a></span>
+        {% endfor %}
+    </div>
+{% endif %}
 <a href="{% url 'ranking' %}" class="btn btn-default" aria-label="Home">
   <span class="glyphicon glyphicon-home" aria-hidden="false"></span>
-</a><div class="container">
+</a>
+
+<div class="container">
 
 <div class="row">
      <div class="col-lg-12">
      <canvas teamName = {{ teamData.name }} team={{ teamData.id }} id="teamCanvas{{ teamData.id }}" class='teamGraph' height="75"></canvas>
      </div>
 </div>
-
 
 {% if teamDetailsActive %}
     <div class="ActiveInactiveHeader">Active Sprints</div>
@@ -86,6 +95,7 @@
         <script src="{% static "vendor/chart/Chart.js" %}"></script>
         <script src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
         <script src="{% static "vendor/mixitup/mixitup.js" %}"></script>
+        <script src="{% static "vendor/marquee/jquery.marquee.js" %}"></script>
         <script src="{% static "site/team.js" %}"></script>
 
 <script>
@@ -99,5 +109,15 @@
          $this.tooltip('show');
      }
  });
+
+ {% if codeCommitEnabled %}
+    $('.marquee').marquee({
+        duration: 30000,
+        direction: 'left',
+        duplicated: true,
+        pauseOnHover: true
+    });
+{% endif %}
 </script>
+
 </html>

@@ -195,3 +195,7 @@ table {
 .marquee-element {
     padding-left: 50px;
 }
+
+.background .jumbotron {
+     margin-bottom: 0px;
+}

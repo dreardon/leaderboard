@@ -12,6 +12,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     isActive = models.BooleanField()
     profile_pic = models.ImageField(upload_to='media',null=True, blank=True)
+    members = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return "{0} {1} {2}".format(self.name,'(Active: ',str(self.isActive)+')')
@@ -56,6 +57,7 @@ class SourceCommit(models.Model):
     title = models.TextField(null=False, blank=False)
     message = models.TextField(null=False, blank=False)
     author_name = models.TextField(null=False, blank=False)
+    author_login = models.TextField(null=False, blank=False)
     author_email = models.TextField(null=False, blank=False)
     authored_date = models.DateTimeField(null=False, blank=False)
     committer_name = models.TextField(null=False, blank=False)
