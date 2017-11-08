@@ -1,7 +1,7 @@
 
-function buildTeamTrendGraph(teamName, teamId,canvasElement) {
+function buildTeamTrendGraph(teamName, teamId, sprintId, canvasElement) {
 
-    d3.json('/api/teamSprintTrend/' + teamId+'/', function (error, data) {
+    d3.json('/api/teamSprintTrend/' + teamId+'/'+ sprintId+'/', function (error, data) {
         cdata = data;
         var labeldata = [];
         var chrtdata = [];
@@ -51,6 +51,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
                 yAxes: [{
                     ticks: {
                         fontColor: "#000000",
+                        beginAtZero: true
                     }
                  }],
                  xAxes: [{
@@ -81,5 +82,5 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
 };
 
 $( ".teamGraph" ).each(function() {
-  buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('id'))
+  buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('sprint'),$(this).attr('id'))
 });

@@ -5,9 +5,9 @@ function random_rgba() {
     return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
 }
 
-function buildTeamTrendGraph(teamName, teamId,canvasElement) {
+function buildTeamTrendGraph(teamName, teamId, sprintId, canvasElement) {
 
-    d3.json('/api/teamSprintTrend/' + teamId+'/', function (error, data) {
+    d3.json('/api/teamSprintTrend/' + teamId+'/' + sprintId+'/', function (error, data) {
         cdata = data;
         var labeldata = [];
         var chrtdata = [];
@@ -31,7 +31,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
           },
           options: {
             animation: {
-                duration: 0,
+                duration: 1500,
                 onComplete: function () {
                     var ctx = this.chart.ctx;
                     ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
@@ -71,6 +71,11 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
                              'year': 'MMM DD',
                          }
                      }
+                 }],
+                 yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
                  }]
              }
           }
@@ -79,7 +84,7 @@ function buildTeamTrendGraph(teamName, teamId,canvasElement) {
 };
 
 $( ".teamGraph" ).each(function() {
-  buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('id'))
+  buildTeamTrendGraph($(this).attr('teamName'),$(this).attr('team'),$(this).attr('sprint'),$(this).attr('id'))
 });
 
 function addData(chart, label, color, data) {
@@ -138,7 +143,7 @@ function buildTeamLeaderGraph(dateData) {
     $(".rankingPoints").each(function (index) {
         var randomColor = random_rgba()
         var teamName = $(this).attr('teamname')
-        d3.json('/api/teamSprintPoints/' + $(this).attr('teamid')+'/', function (error, data) {
+        d3.json('/api/teamSprintPoints/' + $(this).attr('teamid')+'/' + $(this).attr('sprintid')+'/', function (error, data) {
             addData(lineChart,teamName,colors[index],data);
         });
 

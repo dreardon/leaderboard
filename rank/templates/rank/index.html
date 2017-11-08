@@ -9,9 +9,23 @@
     <link rel="stylesheet" type="text/css" href="{% static 'site/rank.css' %}" />
   </head>
   <body class="background">
+
 <div class="jumbotron text-center">
-    <div class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=currentSprint.id %}">{{ currentSprint.name }}</a></h1></div>
+    <span class="sprintTitle"><h1> <a href="{% url 'sprintdetail' sprintid=displaySprint.id %}">{{ displaySprint.name }}</a></h1></span>
+    {% if oldSprintsEnabled %}
+        <span id="sprintselect">
+            <form name="sprintselect">
+                <select name="menu" onChange="location.href='/'+this.value+''">
+                        <option value=""></option>
+                    {% for x in sprintList %}
+                        <option value="{{ x.id }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </span>
+    {% endif %}
 </div>
+
 {% if codeCommitEnabled %}
     <div class="marquee">
         {% for x in commits %}
@@ -30,16 +44,16 @@
         <div class="card mix-target" data-order={{ team.total_points }}>
             <div class="row text-center">
                 <div class="col-lg-3 card-align">
-                    <div class="'rankingImage"> <img src="media/{{ team.profile_pic }}" /></div>
+                    <div class="'rankingImage"> <img src="/media/{{ team.profile_pic }}" /></div>
                 </div>
                 <div class="col-lg-3 card-align">
                     <div class="rankingName">{{ team.name }}</div>
                 </div>
                 <div class="col-lg-3 card-align">
-                    <div class="rankingPoints" teamId={{ team.id }} teamName={{ team.name }}> <a href="{% url 'teamdetail' teamId=team.id %}"> {{ team.total_points }}</a></div>
+                    <div class="rankingPoints" teamId={{ team.id }} sprintId={{ displaySprint.id }} teamName={{ team.name }}> <a href="{% url 'teamdetail' teamId=team.id %}"> {{ team.total_points }}</a></div>
                 </div>
                 <div class="col-lg-3 card-align">
-                    <canvas teamName = {{ team.name }} team={{ team.id }} id="teamCanvas{{ team.id }}" class='teamGraph' height="75"></canvas>
+                    <canvas teamName = {{ team.name }} team={{ team.id }} sprint={{ displaySprint.id }} id="teamCanvas{{ team.id }}" class='teamGraph' height="75"></canvas>
                 </div>
             </div>
         </div>
@@ -74,7 +88,7 @@
     $( "#lineChart" ).remove();
     $( ".marquee" ).remove();
 {% else %}
-    d3.json("api/teamSprintDates/", function (error, dateData) {
+    d3.json("/api/teamSprintDates/{{ displaySprint.id }}", function (error, dateData) {
         buildTeamLeaderGraph(dateData)
     });
 {% endif %}

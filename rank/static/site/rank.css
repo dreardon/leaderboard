@@ -199,3 +199,13 @@ table {
 .background .jumbotron {
      margin-bottom: 0px;
 }
+
+#sprintselect {
+    margin: 0 0 0 0;
+    display:none;
+
+}
+
+.jumbotron:hover #sprintselect {
+    display:block;
+}

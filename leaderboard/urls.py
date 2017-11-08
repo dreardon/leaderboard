@@ -22,6 +22,7 @@ from rank.views import editSprint, deleteSprint
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^(?P<sprintid>[0-9]+)/$', views.ranking, name='ranking'),
     url(r'^$', views.ranking, name='ranking'),
     url(r'^dataentry/', views.dataEntry, name='dataentry'),
     url(r'^updatecommits/', views.updateCommits, name='updatecommits'),
@@ -34,8 +35,11 @@ urlpatterns = [
     url(r'^detail/team/(?P<teamId>[0-9]+)/$', views.teamDetails, name='teamdetail'),
     url(r'^detail/', views.sprintDetails, name='detail'),
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
-    url(r'^api/teamSprintDates/', views.teamSprintDates, name='teamSprintDates'),
+    url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/(?P<sprintId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
+    #url(r'^api/teamSprintDates/', views.teamSprintDates, name='teamSprintDates'),
+    url(r'^api/teamSprintDates/(?P<sprintid>[0-9]+)/$', views.teamSprintDates, name='teamSprintDates'),
     url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),
+    url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/(?P<sprintId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),
     url(r'^sprints/', views.sprints, name='sprints'),
     url(r'^sprint/edit/(?P<sprintid>[0-9]+)/$', views.editSprint, name='editsprint'),
     url(r'^sprint/delete/(?P<sprintid>[0-9]+)/$', views.deleteSprint, name='deletesprint'),

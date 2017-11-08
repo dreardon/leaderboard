@@ -135,9 +135,10 @@ GITLAB_SERVER="http://gitlab.com/"
 GITLAB_PRIVATE_TOKEN = "enter_your_token"
 CODE_COMMIT_DISPLAY_ENABLED = True
 INITIAL_COMMIT_LOAD = 30
+OLD_SPRINTS_ENABLED = True
 
 try:
-    exec(open('leaderboard/local_settings.py').read())
+    exec(open(os.path.join(BASE_DIR, 'leaderboard/local_settings.py')).read())
     print('Using local_settings.py file')
 except OSError as e:
     print('Using default settings.py file')

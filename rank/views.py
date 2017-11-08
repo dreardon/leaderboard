@@ -11,38 +11,53 @@ from datetime import date, timedelta
 import requests
 
 
-def ranking(request):
-    currentSprint = Sprint.objects.filter(isActive=True)[0]
+def ranking(request, sprintid=None):
+    sprintList = Sprint.objects.values('id','name')
+    if sprintid:
+        displaySprint = Sprint.objects.filter(id=sprintid)[0]
+    else:
+        displaySprint = Sprint.objects.filter(isActive=True)[0]
     try:
         activeMessage = SystemMessage.objects.filter(isActive=True).values_list('content',flat=True)[0]
     except (SystemMessage.DoesNotExist, IndexError) as e:
         activeMessage = None
-    activeTeams = Team.objects.filter(isActive=True).order_by('-drawing__drawingDate')
-    currentStandings = Team.objects.filter(isActive=True,ranking__criteria__isActive=True,ranking__sprint__isActive=True)\
+    currentStandings = Team.objects.filter(isActive=True,ranking__criteria__isActive=True,ranking__sprint__id=displaySprint.id)\
         .values('name','profile_pic','id')\
         .annotate(total_points=Sum('ranking__points')).order_by('-total_points')
-    lastModified = Ranking.objects.filter(sprint__isActive=True).values_list('lastModified', flat=True).order_by('-lastModified')[0]
+    try:
+        lastModified = Ranking.objects.filter(sprint__isActive=True).values_list('lastModified', flat=True).order_by('-lastModified')[0]
+    except:
+        lastModified = ''
     sourceServer = settings.GITLAB_SERVER
     codeCommitEnabled = settings.CODE_COMMIT_DISPLAY_ENABLED
+    oldSprintsEnabled = settings.OLD_SPRINTS_ENABLED
     commits = SourceCommit.objects.filter().values('authored_date', 'message', 'author_name', 'short_id', 'long_id',
                                                    'path_with_namespace').order_by('-committed_date')[:20]
-    context = {'activeTeams': activeTeams, 'currentSprint': currentSprint, 'currentStandings': currentStandings, \
+    context = {'sprintList':sprintList,'displaySprint': displaySprint, 'currentStandings': currentStandings, \
                'lastModified': lastModified, 'activeMessage': activeMessage, 'commits': commits, \
-               'sourceServer': sourceServer, 'codeCommitEnabled': codeCommitEnabled}
+               'sourceServer': sourceServer, 'codeCommitEnabled': codeCommitEnabled,'oldSprintsEnabled':oldSprintsEnabled}
     return render(request, 'rank/index.html', context)
 
-def teamSprintDates(request):
+def teamSprintDates(request, sprintid=None):
 
     # Get Date Range for Labels
-    firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
-    delta = date.today() - firstdate.get('dataDate')  # timedelta
+    if sprintid:
+        firstdate = Ranking.objects.filter(sprint__id=sprintid).values('dataDate').order_by('dataDate')[0]
+    else:
+        firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
+    sprintActive = Sprint.objects.filter(id=sprintid).values_list('isActive',flat=True)
+    if sprintActive == True:
+        delta = date.today() - firstdate.get('dataDate')  # timedelta
+    else:
+        lastdate = Ranking.objects.filter(sprint__id=sprintid).values('dataDate').order_by('-dataDate')[0]
+        delta = lastdate.get('dataDate') - firstdate.get('dataDate')  # timedelta
     dateListing = []
     for i in range(delta.days + 1):
         dateListing.append(firstdate.get('dataDate') + timedelta(days=i))
 
     return JsonResponse(dateListing, safe=False)
 
-def teamSprintPoints(request,**kwargs):
+def teamSprintPoints(request,sprintId=None,**kwargs):
     def cumulative_add(scoreListing):
         cumulativeListing = []
         for elt in scoreListing:
@@ -53,8 +68,13 @@ def teamSprintPoints(request,**kwargs):
         return cumulativeListing
 
     # Get Date Range for Labels
-    firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
-    delta = date.today() - firstdate.get('dataDate')  # timedelta
+    if sprintId:
+        firstdate = Ranking.objects.filter(sprint__id=sprintId).values('dataDate').order_by('dataDate')[0]
+        lastdate = Ranking.objects.filter(sprint__id=sprintId).values('dataDate').order_by('-dataDate')[0]
+        delta = lastdate.get('dataDate') - firstdate.get('dataDate')  # timedelta
+    else:
+        firstdate = Ranking.objects.filter(sprint__isActive=True).values('dataDate').order_by('dataDate')[0]
+        delta = date.today() - firstdate.get('dataDate')  # timedelta
     dateListing = []
     for i in range(delta.days + 1):
         dateListing.append(firstdate.get('dataDate') + timedelta(days=i))
@@ -63,10 +83,9 @@ def teamSprintPoints(request,**kwargs):
     scoreListing = []
     for x in dateListing:
         if Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True,
-                                  sprint__isActive=True,
                                   dataDate=x).exists():
             newEntry = Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True,
-                                              sprint__isActive=True, dataDate=x) \
+                                              dataDate=x) \
                 .values('dataDate') \
                 .annotate(daily_points=Sum('points')).values('daily_points')[0]
             scoreListing.append(int(newEntry.get('daily_points')))
@@ -78,7 +97,8 @@ def teamSprintPoints(request,**kwargs):
 
 def teamSprintTrend(request,**kwargs):
     teamId = kwargs['teamId']
-    data = Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True, sprint__isActive=True) \
+    sprintId = kwargs['sprintId']
+    data = Ranking.objects.filter(team_id=teamId, team__isActive=True, criteria__isActive=True, sprint_id=sprintId) \
         .values('dataDate') \
         .annotate(daily_points=Sum('points')).order_by('dataDate')
 
@@ -91,6 +111,7 @@ def sprintDetails(request,**kwargs):
     return render(request, 'rank/sprint.html', context)
 
 def teamDetails(request,**kwargs):
+    currentSprint = Sprint.objects.get(isActive=True)
     teamId = kwargs['teamId']
     teamData = Team.objects.get(id=teamId)
     teamDetailsActive= Ranking.objects.filter(team_id=teamId,sprint__isActive=1).values('dataDate','points','comment','criteria__name','team__name','sprint__name').order_by('-dataDate')
@@ -102,7 +123,7 @@ def teamDetails(request,**kwargs):
     teamcommits = SourceCommit.objects.filter(author_login__in=members).values('authored_date', 'message', 'author_name', 'short_id', 'long_id',
                                                    'path_with_namespace').order_by('-committed_date')[:20]
     context = {'teamDetailsActive': teamDetailsActive,'teamDetailsInactive':teamDetailsInactive,'title':'Team Detail','teamData':teamData,
-               'teamcommits':teamcommits,'sourceServer':sourceServer,'codeCommitEnabled':codeCommitEnabled}
+               'teamcommits':teamcommits,'sourceServer':sourceServer,'codeCommitEnabled':codeCommitEnabled,'currentSprint':currentSprint}
     return render(request, 'rank/team.html', context)
 
 def dataEntry(request, template_name='rank/data_entry.html'):
