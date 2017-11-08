@@ -12,13 +12,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         def processCommits(queryDate):
             projectUrl = settings.GITLAB_SERVER + 'api/v4/projects'
-            response = requests.get(projectUrl, headers={'PRIVATE_TOKEN': settings.GITLAB_PRIVATE_TOKEN})
+            response = requests.get(projectUrl, headers={'PRIVATE-TOKEN': settings.GITLAB_PRIVATE_TOKEN})
             projects = response.json()
             for x in projects:
                 queryId = str(x['id']);
                 path_with_namespace = x['path_with_namespace']
-                commitListUrl = settings.GITLAB_SERVER + 'api/v4/projects/' + queryId + '/repository/commits?since=' + queryDate
-                response = requests.get(commitListUrl, headers={'PRIVATE_TOKEN': settings.GITLAB_PRIVATE_TOKEN})
+                commitListUrl = settings.GITLAB_SERVER + 'api/v4/projects/' + queryId + '/repository/commits?since=' + str(queryDate)
+                response = requests.get(commitListUrl, headers={'PRIVATE-TOKEN': settings.GITLAB_PRIVATE_TOKEN})
                 commits = response.json()
                 for x in commits:
                     commitData = SourceCommit()
