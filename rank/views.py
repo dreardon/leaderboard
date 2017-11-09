@@ -288,6 +288,7 @@ def deleteSprint(request,**kwargs):
 def updateCommits(request,**kwargs):
 
     def processCommits(queryDate):
+        queryDate = queryDate + timedelta(0, 1)
         projectUrl = settings.GITLAB_SERVER + 'api/v4/projects'
         response = requests.get(projectUrl, headers={'PRIVATE-TOKEN':settings.GITLAB_PRIVATE_TOKEN})
         projects = response.json()

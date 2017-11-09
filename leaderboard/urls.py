@@ -36,7 +36,6 @@ urlpatterns = [
     url(r'^detail/', views.sprintDetails, name='detail'),
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
     url(r'^api/teamSprintTrend/(?P<teamId>[0-9]+)/(?P<sprintId>[0-9]+)/$', views.teamSprintTrend, name='teamSprintTrend'),
-    #url(r'^api/teamSprintDates/', views.teamSprintDates, name='teamSprintDates'),
     url(r'^api/teamSprintDates/(?P<sprintid>[0-9]+)/$', views.teamSprintDates, name='teamSprintDates'),
     url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),
     url(r'^api/teamSprintPoints/(?P<teamId>[0-9]+)/(?P<sprintId>[0-9]+)/$', views.teamSprintPoints, name='teamSprintPoints'),

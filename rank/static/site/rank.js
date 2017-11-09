@@ -45,7 +45,8 @@ function buildTeamTrendGraph(teamName, teamId, sprintId, canvasElement) {
                         }
 
                     });
-                }},
+                }
+            },
             maintainAspectRatio: false,
             legend: {
                 display: false,
